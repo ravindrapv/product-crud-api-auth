@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 
-const verifyToken = (req, res, next) => {
+const verifyTokenAndRole = (roles) => (req, res, next) => {
   const token = req.headers["authorization"];
-  console.log("Token:", token);
 
   if (!token) {
     return res.status(403).json({ message: "Unauthorized: Token missing" });
@@ -13,10 +12,16 @@ const verifyToken = (req, res, next) => {
       console.log("Error decoding token:", err);
       return res.status(403).json({ message: "Unauthorized: Invalid token" });
     }
-    console.log("Decoded user:", user);
+
+    if (!roles.includes(user.role)) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Insufficient role privileges" });
+    }
+
     req.user = user;
     next();
   });
 };
 
-module.exports = verifyToken;
+module.exports = verifyTokenAndRole;
