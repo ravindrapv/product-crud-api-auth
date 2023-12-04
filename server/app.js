@@ -2,12 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/crud_app", {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
